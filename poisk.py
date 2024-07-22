@@ -13,6 +13,9 @@ cap = cv2.VideoCapture(video_path)
 window_width = 1024
 window_height = 768
 
+# Идентификатор класса для дронов
+drone_class_id = 0  # Измените на ваш идентификатор класса дронов, если это не 0
+
 while cap.isOpened():
     ret, frame = cap.read()
     if not ret:
@@ -27,7 +30,13 @@ while cap.isOpened():
             x1, y1, x2, y2 = map(int, box.xyxy.cpu().numpy().flatten())  # Преобразование тензора в numpy массив и затем в список
             class_id = int(box.cls.cpu().numpy().flatten()[0])  # Получение идентификатора класса
             confidence = box.conf.cpu().numpy().flatten()[0]  # Получение доверительного значения
-            label = f'{class_id} {confidence:.2f}'
+            
+            # Определение метки в зависимости от класса
+            if class_id == drone_class_id:
+                label = f'DRON {confidence:.2f}'
+            else:
+                label = f'Класс {class_id} {confidence:.2f}'
+            
             cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
             cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
     
