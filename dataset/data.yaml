@@ -1,0 +1,17 @@
+train: C:/MyProject/traningyolo/dataset/train/images
+val: C:/MyProject/traningyolo/dataset/valid/images
+test: C:/MyProject/traningyolo/dataset/test/images
+
+nc: 4
+names: ['0', '1', '2', '3']
+
+roboflow:
+  workspace: project-kxmbo
+  project: drones-8rmrj
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/project-kxmbo/drones-8rmrj/dataset/1
+
+
+
+  
