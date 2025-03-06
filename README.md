@@ -7,6 +7,8 @@ pip install ultralytics opencv-python roboflow
 
 Далее запустить файл poisk.py
 
+При получении ошибки с импортом CV2 поменять итерпритатор питон
+
 
 
 Общее описание
