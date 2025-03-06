@@ -2,16 +2,26 @@ import cv2
 from ultralytics import YOLO
 
 # Загрузка модели с наилучшими весами, сохраненными после тренировки
-model = YOLO('runs/detect/train3/weights/best.pt')
+model = YOLO('C:/drondetect-main/runs/detect/train3/weights/best.pt')
 
 # Открываем видео файл
-video_path = r'C:\Users\ovsya\Downloads\video2d.mp4'  # Использование raw строки
-
+video_path = r'C:\video2d.mp4'  # Путь к видео
 cap = cv2.VideoCapture(video_path)
 
-# Определение желаемого размера окна
-window_width = 1024
-window_height = 768
+# Проверка, открылось ли видео
+if not cap.isOpened():
+    print("Ошибка: не удалось открыть видео файл.")
+    exit()
+
+# Получаем информацию о видео (например, ширина, высота, частота кадров)
+frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+fps = cap.get(cv2.CAP_PROP_FPS)
+
+# Настройка пути и кодека для сохранения видео
+output_path = r'C:\video_with_drone_detection.mp4'  # Путь для сохранения нового видео
+fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # Используем кодек mp4v для .mp4
+out = cv2.VideoWriter(output_path, fourcc, fps, (frame_width, frame_height))
 
 # Идентификатор класса для дронов
 drone_class_id = 0  # Измените на ваш идентификатор класса дронов, если это не 0
@@ -41,8 +51,11 @@ while cap.isOpened():
             cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
     
     # Масштабирование кадра до заданного размера
-    frame = cv2.resize(frame, (window_width, window_height))
+    frame = cv2.resize(frame, (frame_width, frame_height))
     
+    # Запись кадра в новый видеофайл
+    out.write(frame)
+
     # Показываем кадр с рамками
     cv2.imshow('Drone Detection', frame)
     
@@ -52,4 +65,5 @@ while cap.isOpened():
 
 # Освобождаем ресурсы
 cap.release()
+out.release()
 cv2.destroyAllWindows()
